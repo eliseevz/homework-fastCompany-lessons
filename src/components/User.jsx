@@ -1,8 +1,19 @@
 import React from "react"
 import Username from "./Username"
+import PropTypes from "prop-types"
 
 // eslint-disable-next-line react/prop-types
-const User = ({ user, qualitiesHundler, removeHundler, getUserMark }) => {
+const User = ({
+    user,
+    // eslint-disable-next-line react/prop-types
+    qualitiesHundler,
+    // eslint-disable-next-line react/prop-types
+    removeHundler,
+    // eslint-disable-next-line react/prop-types
+    getUserMark,
+    // eslint-disable-next-line react/prop-types
+    selectedProf
+}) => {
     return (
         // eslint-disable-next-line react/prop-types
         <tr className="personElement" id={user._id}>
@@ -18,18 +29,14 @@ const User = ({ user, qualitiesHundler, removeHundler, getUserMark }) => {
             <td>
                 <button
                     onClick={() => {
-                        // eslint-disable-next-line react/prop-types
                         getUserMark(user._id)
                     }}
                 >
-                    {/* eslint-disable-next-line react/prop-types */}
-                    {user.isMarked
-                        ? (
-                            <i className="bi bi-bookmark-fill"></i>
-                        )
-                        : (
-                            <i className="bi bi-bookmark"></i>
-                        )}
+                    {user.isMarked ? (
+                        <i className="bi bi-bookmark-fill"></i>
+                    ) : (
+                        <i className="bi bi-bookmark"></i>
+                    )}
                 </button>
             </td>
             <td>
@@ -44,6 +51,14 @@ const User = ({ user, qualitiesHundler, removeHundler, getUserMark }) => {
             </td>
         </tr>
     )
+}
+
+User.propTypes = {
+    user: PropTypes.object,
+    selectedProf: PropTypes.object,
+    qualitiesHundler: PropTypes.func,
+    removeHundler: PropTypes.func,
+    getUserMark: PropTypes.func
 }
 
 export default User

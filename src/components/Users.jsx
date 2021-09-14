@@ -1,38 +1,79 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import User from "./User"
 import Phrase from "./Phrase"
+import GroupList from "./groupList"
+import api from "../API"
 // eslint-disable-next-line import/no-duplicates,no-unused-vars
 import Paginate from "../utils/paginate"
 import Pagination from "./Pagination"
 // eslint-disable-next-line import/no-duplicates
 import paginate from "../utils/paginate"
+import Loader from "./Loader/Loader";
 
 const Users = ({
-    // eslint-disable-next-line react/prop-types
     users: AllUsers,
-    // eslint-disable-next-line react/prop-types
     renderPhrase,
-    // eslint-disable-next-line react/prop-types
     qualitiesHundler,
-    // eslint-disable-next-line react/prop-types
     removeHundler,
-    // eslint-disable-next-line react/prop-types
     getUserMark
 }) => {
     const count = AllUsers.length
     const pageSize = 4
     const [currentPage, setCurrentPage] = useState(1)
+    const [professions, setProfessions] = useState()
+    const [selectedProf, setSelectedProf] = useState()
+
+
+
     const handlePageChange = (pageIndex) => {
         console.log("page: ", pageIndex)
         setCurrentPage(pageIndex)
     }
+    useEffect(() => {
+        console.log("useEffect started")
+        api.professions.fetchAll().then((data) => setProfessions(data))
+    }, [])
+    useEffect(() => {
+        setCurrentPage(1)
+    }, [selectedProf])
 
-    const userCrop = paginate(AllUsers, currentPage, pageSize)
+    console.log(AllUsers, " all users")
+    const filteredUsers = selectedProf
+        ? AllUsers.filter((user) => user.profession._id === selectedProf._id)
+        : AllUsers
+    const userCrop = paginate(filteredUsers, currentPage, pageSize)
 
-    return count > 0
-        ? (
-            <>
-                <Phrase renderPhrase={renderPhrase} users={AllUsers}/>
+    const clearFilter = () => {
+        setSelectedProf()
+    }
+
+    const handleProfessionSelect = (item) => {
+        console.log(item, ' ITEM FROM HANDLER PROF')
+        setSelectedProf(item)
+    }
+
+    return count > 0 ? (
+        <div className="d-flex">
+            {professions
+                ? (
+                    <div className="d-flex flex-column flex-shrink-0 p-3">
+                        <GroupList
+                            items={professions}
+                            onItemSelect={handleProfessionSelect}
+                            selectedItem={selectedProf}
+                        />
+                        <button
+                            className="btn btn-secondary mt-2"
+                            onClick={clearFilter}
+                        >
+                            Очистить
+                        </button>
+                    </div>
+                )
+                : <Loader/>
+            }
+            <div className="d-flex flex-column">
+                <Phrase renderPhrase={renderPhrase} users={filteredUsers} />
                 <table className="table">
                     <thead>
                         <tr>
@@ -49,6 +90,7 @@ const Users = ({
                         {userCrop.map((user, index) => {
                             return (
                                 <User
+                                    selectedProf={selectedProf}
                                     getUserMark={getUserMark}
                                     key={index}
                                     user={user}
@@ -59,21 +101,23 @@ const Users = ({
                         })}
                     </tbody>
                 </table>
-                <Pagination
-                    itemsCount={count}
-                    pageSize={pageSize}
-                    currentPage={currentPage}
-                    onPageChange={handlePageChange}
-                />
-            </>
-        )
-        : (
-            <Phrase
-                renderPhrase={renderPhrase}
-                users={AllUsers}
-                isNullUsers={true}
-            />
-        )
+                <div className="d-flex justify-content-center">
+                    <Pagination
+                        itemsCount={filteredUsers.length}
+                        pageSize={pageSize}
+                        currentPage={currentPage}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
+            </div>
+        </div>
+    ) : (
+        <Phrase
+            renderPhrase={renderPhrase}
+            users={AllUsers}
+            isNullUsers={true}
+        />
+    )
 }
 
 export default Users

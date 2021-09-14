@@ -1,9 +1,19 @@
-import React, { useState } from "react"
+import React, {useEffect, useState} from "react"
 import Users from "./components/Users"
 import api from "./API"
+import Loader from "./components/Loader/Loader";
 
 const App = () => {
-    const [users, setUsers] = useState(api.users.fetchAll())
+    
+    const [users, setUsers] = useState()
+
+    useEffect(()=> {
+        api.users.fetchAll()
+            .then(data => {
+                setUsers(data)
+            })
+
+    },[App])
 
     console.log(users)
 
@@ -65,13 +75,15 @@ const App = () => {
     }
 
     return (
-        <Users
+        users
+        ? <Users
             getUserMark={getUserMark}
             users={users}
             renderPhrase={renderPhrase}
             qualitiesHundler={qualitiesHundler}
             removeHundler={removeHundler}
         />
+        : <Loader/>
     )
 }
 
