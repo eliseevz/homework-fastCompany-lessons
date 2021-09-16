@@ -7,6 +7,18 @@ const App = () => {
     
     const [users, setUsers] = useState()
 
+    const handleToggleBookMark = (id) => {
+        console.log("this handleToggleBookMark and ID: ", id)
+        setUsers(
+            users.map(item => {
+                if (item._id === id) {
+                    return {...item, bookmark: !item.bookmark}
+                }
+                return item
+            })
+        )
+    }
+
     useEffect(()=> {
         api.users.fetchAll()
             .then(data => {
@@ -62,15 +74,13 @@ const App = () => {
         })
     }
 
-    const removeHundler = (event) => {
-        const deletedId = event.target.closest(".personElement").id
+    const removeHundler = (id) => {
         const newUsers = []
         users.forEach((item) => {
-            if (item._id !== deletedId) {
+            if (item._id !== id) {
                 newUsers.push(item)
             }
         })
-        console.log(newUsers)
         setUsers(newUsers)
     }
 
@@ -82,6 +92,7 @@ const App = () => {
             renderPhrase={renderPhrase}
             qualitiesHundler={qualitiesHundler}
             removeHundler={removeHundler}
+            handleToggleBookMark={handleToggleBookMark}
         />
         : <Loader/>
     )

@@ -1,47 +1,49 @@
 import React, { useEffect, useState } from "react"
-import User from "./User"
 import Phrase from "./Phrase"
 import GroupList from "./groupList"
 import api from "../API"
-// eslint-disable-next-line import/no-duplicates,no-unused-vars
-import Paginate from "../utils/paginate"
 import Pagination from "./Pagination"
-// eslint-disable-next-line import/no-duplicates
 import paginate from "../utils/paginate"
 import Loader from "./Loader/Loader";
+import UserTable from "./UsersTable";
+import _ from "lodash"
 
 const Users = ({
     users: AllUsers,
     renderPhrase,
-    qualitiesHundler,
-    removeHundler,
-    getUserMark
+    ...rest
 }) => {
+    console.log(rest, " this is rest")
     const count = AllUsers.length
-    const pageSize = 4
+    const pageSize = 8
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfessions] = useState()
     const [selectedProf, setSelectedProf] = useState()
-
-
+    const [sortBy, setSortBy] = useState({path: "name", order: "asc"})
 
     const handlePageChange = (pageIndex) => {
         console.log("page: ", pageIndex)
         setCurrentPage(pageIndex)
     }
+
+    const handleSort = (item) => {
+
+    }
+
     useEffect(() => {
         console.log("useEffect started")
         api.professions.fetchAll().then((data) => setProfessions(data))
     }, [])
+
     useEffect(() => {
         setCurrentPage(1)
     }, [selectedProf])
 
-    console.log(AllUsers, " all users")
     const filteredUsers = selectedProf
         ? AllUsers.filter((user) => user.profession._id === selectedProf._id)
         : AllUsers
-    const userCrop = paginate(filteredUsers, currentPage, pageSize)
+    const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
+    const userCrop = paginate(sortedUsers, currentPage, pageSize)
 
     const clearFilter = () => {
         setSelectedProf()
@@ -74,33 +76,12 @@ const Users = ({
             }
             <div className="d-flex flex-column">
                 <Phrase renderPhrase={renderPhrase} users={filteredUsers} />
-                <table className="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Имя</th>
-                            <th scope="col">Качества</th>
-                            <th scope="col">Профессия</th>
-                            <th scope="col">Встретился, раз</th>
-                            <th scope="col">Оценка</th>
-                            <th scope="col">Закладки</th>
-                            <th scope="col"></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {userCrop.map((user, index) => {
-                            return (
-                                <User
-                                    selectedProf={selectedProf}
-                                    getUserMark={getUserMark}
-                                    key={index}
-                                    user={user}
-                                    qualitiesHundler={qualitiesHundler}
-                                    removeHundler={removeHundler}
-                                />
-                            )
-                        })}
-                    </tbody>
-                </table>
+                <UserTable
+                    users={userCrop}
+                    onSort={setSortBy}
+                    selectedSort={sortBy}
+                    {...rest}
+                />
                 <div className="d-flex justify-content-center">
                     <Pagination
                         itemsCount={filteredUsers.length}

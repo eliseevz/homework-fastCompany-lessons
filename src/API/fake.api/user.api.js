@@ -39,7 +39,8 @@ const users = [
         profession: professions.doctor,
         qualities: [qualities.tedious, qualities.uncertain, qualities.strange],
         completedMeetings: 36,
-        rate: 2.5
+        rate: 2.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471816",
@@ -47,7 +48,8 @@ const users = [
         profession: professions.doctor,
         qualities: [qualities.buller, qualities.handsome, qualities.alcoholic],
         completedMeetings: 15,
-        rate: 2.5
+        rate: 2.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471817",
@@ -55,6 +57,7 @@ const users = [
         profession: professions.doctor,
         qualities: [qualities.buller],
         completedMeetings: 247,
+        bookmark: false,
         rate: 3.5
     },
     {
@@ -63,6 +66,7 @@ const users = [
         profession: professions.waiter,
         qualities: [qualities.uncertain],
         completedMeetings: 148,
+        bookmark: false,
         rate: 3.5
     },
     {
@@ -71,6 +75,7 @@ const users = [
         profession: professions.physics,
         qualities: [qualities.strange, qualities.tedious],
         completedMeetings: 37,
+        bookmark: false,
         rate: 4.6
     },
     {
@@ -79,6 +84,7 @@ const users = [
         profession: professions.physics,
         qualities: [qualities.strange, qualities.uncertain],
         completedMeetings: 147,
+        bookmark: false,
         rate: 3.5
     },
     {
@@ -87,6 +93,7 @@ const users = [
         profession: professions.engineer,
         qualities: [qualities.strange, qualities.tedious],
         completedMeetings: 72,
+        bookmark: false,
         rate: 3.5
     },
     {
@@ -95,6 +102,7 @@ const users = [
         profession: professions.engineer,
         qualities: [qualities.handsome],
         completedMeetings: 72,
+        bookmark: false,
         rate: 5
     },
     {
@@ -102,6 +110,7 @@ const users = [
         name: "Моника Геллер",
         profession: professions.cook,
         qualities: [qualities.strange, qualities.uncertain],
+        bookmark: false,
         completedMeetings: 17,
         rate: 4.5
     },
@@ -110,6 +119,7 @@ const users = [
         name: "Рататуй",
         profession: professions.cook,
         qualities: [qualities.handsome, qualities.buller],
+        bookmark: false,
         completedMeetings: 17,
         rate: 4.5
     },
@@ -119,6 +129,7 @@ const users = [
         profession: professions.actor,
         qualities: [qualities.uncertain, qualities.strange],
         completedMeetings: 434,
+        bookmark: false,
         rate: 3.5
     },
     {
@@ -127,6 +138,7 @@ const users = [
         profession: professions.actor,
         qualities: [qualities.handsome],
         completedMeetings: 434,
+        bookmark: false,
         rate: 5
     }
 ]
