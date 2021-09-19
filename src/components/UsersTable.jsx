@@ -1,14 +1,16 @@
 import React from "react"
-import User from "./User";
 import PropTypes from "prop-types"
 import TableHeader from "./TableHeader";
 import TableBody from "./TableBody";
 import BookMark from "./Bookmark";
+import QualitiesList from "./qualitiesList";
+import Table from "./table";
+import {Link} from "react-router-dom";
 
-const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHundler, ...rest}) => {
+const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHundler, qualitiesHundler, ...rest}) => {
     const columns = {
-        name: {path: "name", name: "Имя"},
-        qualities: {name: "Качества"},
+        name: {path: "name", name: "Имя", component: (user) => <Link to={`/users/${user._id}`}> {user.name} </Link>},
+        qualities: {name: "Качества", component: (user) => <QualitiesList qualities={user.qualities}/>},
         professions: {path: "profession.name", name: "Профессия"},
         completedMeetings: {path: "completedMeetings", name: "Встретился, раз"},
         rate: {path: "rate", name: "Оценка"},
@@ -32,14 +34,15 @@ const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHun
             )}
     }
     return (
-        <table className="table">
-        <TableHeader
-            {...{onSort, selectedSort, columns}}
-        />
-        <TableBody
-            {...{columns, data: users}}
-        />
-        </table>
+
+            <Table onSort={onSort} selectedSort={selectedSort} columns={columns} data={users}>
+                <TableHeader
+                    {...{onSort, selectedSort, columns}}
+                />
+                <TableBody
+                    {...{columns, data: users}}
+                />
+            </Table>
     )
 }
 

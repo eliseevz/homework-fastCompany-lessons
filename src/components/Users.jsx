@@ -9,17 +9,56 @@ import UserTable from "./UsersTable";
 import _ from "lodash"
 
 const Users = ({
-    users: AllUsers,
-    renderPhrase,
+    users,
+    setUsers: setUsers,
     ...rest
 }) => {
-    console.log(rest, " this is rest")
-    const count = AllUsers.length
+
+    const count = users.length
     const pageSize = 8
     const [currentPage, setCurrentPage] = useState(1)
     const [professions, setProfessions] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const [sortBy, setSortBy] = useState({path: "name", order: "asc"})
+
+
+    const handleToggleBookMark = (id) => {
+        console.log("this handleToggleBookMark and ID: ", id)
+        setUsers(
+            users.map(item => {
+                if (item._id === id) {
+                    return {...item, bookmark: !item.bookmark}
+                }
+                return item
+            })
+        )
+    }
+
+    const renderPhrase = () => {
+        if (
+            users.length === 1 ||
+            (users.length > 20 && users.length % 10 === 1)
+        ) {
+            return "человек"
+        }
+        if (
+            (users.length >= 2 && users.length <= 4) ||
+            (users.length > 20 && users.length % 10 >= 2 && users.length <= 4)
+        ) {
+            return "человека"
+        }
+        return "человек"
+    }
+
+    const removeHundler = (id) => {
+        const newUsers = []
+        users.forEach((item) => {
+            if (item._id !== id) {
+                newUsers.push(item)
+            }
+        })
+        setUsers(newUsers)
+    }
 
     const handlePageChange = (pageIndex) => {
         console.log("page: ", pageIndex)
@@ -40,8 +79,8 @@ const Users = ({
     }, [selectedProf])
 
     const filteredUsers = selectedProf
-        ? AllUsers.filter((user) => user.profession._id === selectedProf._id)
-        : AllUsers
+        ? users.filter((user) => user.profession._id === selectedProf._id)
+        : users
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
     const userCrop = paginate(sortedUsers, currentPage, pageSize)
 
@@ -80,6 +119,8 @@ const Users = ({
                     users={userCrop}
                     onSort={setSortBy}
                     selectedSort={sortBy}
+                    removeHundler={removeHundler}
+                    handleToggleBookMark={handleToggleBookMark}
                     {...rest}
                 />
                 <div className="d-flex justify-content-center">
@@ -95,7 +136,7 @@ const Users = ({
     ) : (
         <Phrase
             renderPhrase={renderPhrase}
-            users={AllUsers}
+            users={users}
             isNullUsers={true}
         />
     )

@@ -2,22 +2,15 @@ import React, {useEffect, useState} from "react"
 import Users from "./components/Users"
 import api from "./API"
 import Loader from "./components/Loader/Loader";
+import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom"
+import NavBar from "./components/navBar";
+import Login from "./layouts/login";
+import Main from "./layouts/main";
+import UserProfile from "./components/UserProfile";
 
 const App = () => {
-    
-    const [users, setUsers] = useState()
 
-    const handleToggleBookMark = (id) => {
-        console.log("this handleToggleBookMark and ID: ", id)
-        setUsers(
-            users.map(item => {
-                if (item._id === id) {
-                    return {...item, bookmark: !item.bookmark}
-                }
-                return item
-            })
-        )
-    }
+    const [users, setUsers] = useState()
 
     useEffect(()=> {
         api.users.fetchAll()
@@ -26,75 +19,22 @@ const App = () => {
             })
 
     },[App])
-
-    console.log(users)
-
-    const getUserMark = (userId) => {
-        console.log("marked or unmarked")
-        const newArr = users.map((user) => {
-            if (userId === user._id) {
-                return {
-                    ...user,
-                    isMarked: !user.isMarked
-                }
-            }
-            return user
-        })
-        setUsers(newArr)
-    }
-
-    const renderPhrase = () => {
-        if (
-            users.length === 1 ||
-            (users.length > 20 && users.length % 10 === 1)
-        ) {
-            return "человек"
-        }
-        if (
-            (users.length >= 2 && users.length <= 4) ||
-            (users.length > 20 && users.length % 10 >= 2 && users.length <= 4)
-        ) {
-            return "человека"
-        }
-        return "человек"
-    }
-
-    const qualitiesHundler = (qualities) => {
-        return qualities.map((item, index) => {
-            const cls = "badge bg-"
-            return (
-                <span
-                    style={{ marginRight: 7 }}
-                    key={index}
-                    className={cls + item.color}
-                >
-                    {item.name}
-                </span>
-            )
-        })
-    }
-
-    const removeHundler = (id) => {
-        const newUsers = []
-        users.forEach((item) => {
-            if (item._id !== id) {
-                newUsers.push(item)
-            }
-        })
-        setUsers(newUsers)
-    }
+    
+    const routing = (
+        <Switch>
+            <Route path="/users/:id" component={UserProfile}/>
+            <Route path="/users" component={(params) => users ? <Users params={params} users={users} setUsers={setUsers}></Users> : <Loader/>} />
+            <Route path="/login" component={Login}/>
+            <Route path="/" exact component={Main}/>
+            <Redirect to="/"/>
+        </Switch>
+    )
 
     return (
-        users
-        ? <Users
-            getUserMark={getUserMark}
-            users={users}
-            renderPhrase={renderPhrase}
-            qualitiesHundler={qualitiesHundler}
-            removeHundler={removeHundler}
-            handleToggleBookMark={handleToggleBookMark}
-        />
-        : <Loader/>
+        <BrowserRouter>
+                <NavBar></NavBar>
+                { routing }
+        </BrowserRouter>
     )
 }
 
