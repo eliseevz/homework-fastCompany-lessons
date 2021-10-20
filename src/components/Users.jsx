@@ -7,6 +7,7 @@ import paginate from "../utils/paginate"
 import Loader from "./Loader/Loader";
 import UserTable from "./UsersTable";
 import _ from "lodash"
+import SearchUser from "./searchUser";
 
 const Users = ({
     users,
@@ -20,6 +21,7 @@ const Users = ({
     const [professions, setProfessions] = useState()
     const [selectedProf, setSelectedProf] = useState()
     const [sortBy, setSortBy] = useState({path: "name", order: "asc"})
+    const [search, setSearch] = useState("")
 
 
     const handleToggleBookMark = (id) => {
@@ -32,6 +34,14 @@ const Users = ({
                 return item
             })
         )
+    }
+
+    const handleSearch = (e) => {
+        console.log(e.target.value)
+        if (e.target.value !== "") {
+            clearFilter()
+        }
+        setSearch(e.target.value)
     }
 
     const renderPhrase = () => {
@@ -65,10 +75,6 @@ const Users = ({
         setCurrentPage(pageIndex)
     }
 
-    const handleSort = (item) => {
-
-    }
-
     useEffect(() => {
         console.log("useEffect started")
         api.professions.fetchAll().then((data) => setProfessions(data))
@@ -82,7 +88,10 @@ const Users = ({
         ? users.filter((user) => user.profession._id === selectedProf._id)
         : users
     const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
-    const userCrop = paginate(sortedUsers, currentPage, pageSize)
+    const searchedUsers = search
+        ? users.filter((user) => user.name.toLowerCase().includes(search.toLowerCase()))
+        : sortedUsers
+    const userCrop = paginate(searchedUsers, currentPage, pageSize)
 
     const clearFilter = () => {
         setSelectedProf()
@@ -90,6 +99,7 @@ const Users = ({
 
     const handleProfessionSelect = (item) => {
         console.log(item, ' ITEM FROM HANDLER PROF')
+        setSearch("")
         setSelectedProf(item)
     }
 
@@ -115,6 +125,7 @@ const Users = ({
             }
             <div className="d-flex flex-column">
                 <Phrase renderPhrase={renderPhrase} users={filteredUsers} />
+                <SearchUser onSearch={handleSearch} search={search} />
                 <UserTable
                     users={userCrop}
                     onSort={setSortBy}
@@ -125,7 +136,7 @@ const Users = ({
                 />
                 <div className="d-flex justify-content-center">
                     <Pagination
-                        itemsCount={filteredUsers.length}
+                        itemsCount={search ? searchedUsers.length : filteredUsers.length}
                         pageSize={pageSize}
                         currentPage={currentPage}
                         onPageChange={handlePageChange}
