@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react"
-import api from "../API/index"
-import Loader from "./Loader/Loader";
+import api from "../../../API"
+import Loader from "../../Loader/Loader";
 import {Link} from "react-router-dom";
 
-const UserProfile = (props) => {
-    const {match} = props
+const UserPage = ({userId}) => {
+
     const {getById} = api.users
 
     const [user, setUser] = useState(undefined)
@@ -14,7 +14,7 @@ const UserProfile = (props) => {
     }, [])
 
     const getUser = async () => {
-        const resp = await getById(match.params.id)
+        const resp = await getById(userId)
         setUser(resp)
         console.log(resp)
     }
@@ -44,4 +44,4 @@ const UserProfile = (props) => {
     )
 }
 
-export default UserProfile
+export default UserPage

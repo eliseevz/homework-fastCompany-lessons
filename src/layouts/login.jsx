@@ -1,99 +1,33 @@
-import React, {useEffect, useState} from "react"
-import TextField from "../components/textField";
-import {validator} from "../utils/validator"
+import React, {useState} from "react"
+import {useParams} from "react-router"
+import LoginForm from "../components/UI/loginForm";
+import RegisterForm from "../components/UI/registerForm";
 
 const Login = () => {
+    const {type} = useParams()
+    const [formType, setFormType] = useState(type === "register" ? type : "login")
 
-    const [data, setData] = useState({
-        email: "",
-        password: ""
-    })
-    const [errors, setErrors] = useState({})
-
-    const validate = () => {
-        const errors = validator(data, validatorConfig)
-
-        setErrors(errors)
-        return Object.keys(errors).length === 0
+    const toggleFormType = () => {
+        setFormType(prevState=>prevState==="register"?"login":"register")
     }
-
-    const isValid = Object.keys(errors).length === 0
-    console.log(isValid, " is valid")
-
-    const validatorConfig = {
-        email: {
-            isRequired: {
-                message: "Электронная почта обязательна для заполнения"
-            },
-            isEmail: {
-                message: "Email введен некорректно"
-            }
-        },
-        password: {
-            isRequired: {
-                message: "Пароль обязательна для заполнения"
-            },
-            isCapitalSymbol: {
-                message: "Пароль должен содержать заглавную букву"
-            },
-            isContainDigit: {
-                message: "Пароль должен содержать хотя бы одну цифру"
-            },
-            min: {
-                message: "Пароль должен состоять минимум из 8 символов",
-                value: 8
-            }
-        },
-    }
-
-    useEffect(() => {
-        validate()
-    }, [data])
-
-    const handleChange = ({target}) => {
-        setData((prevState => ({
-            ...prevState,
-            [target.name]: target.value
-        })))
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault()
-        const isValid = validate()
-        if (!isValid) return
-        console.log(data)
-    }
-
 
     return (
         <div className="container mt-5">
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    <h3 className="mb-4">Логин</h3>
-                    <form onSubmit={handleSubmit}>
-                        <TextField
-                            label="Почта"
-                            name="email"
-                            value={data.email}
-                            onChange={handleChange}
-                            error={errors.email}
-                        />
-                        <TextField
-                            label="Пароль"
-                            type="password"
-                            name="password"
-                            value={data.password}
-                            onChange={handleChange}
-                            error={errors.password}
-                        />
-                        <button
-                            type="submit"
-                            className="btn btn-primary w-100 mx-auto"
-                            disabled={!isValid}
-                        >
-                            Отправить
-                        </button>
-                    </form>
+                    {
+                        formType === "register"
+                        ? <>
+                                <h3 className="mb-4">Регистрация</h3>
+                                <RegisterForm/>
+                                <p>Alrady have account? <a role="button" onClick={toggleFormType}>Sign in</a></p>
+                        </>
+                        : <>
+                            <h3 className="mb-4">Логин</h3>
+                            <LoginForm/>
+                            <p>Dont have account? <a role="button" onClick={toggleFormType}>Sign up</a></p>
+                        </>
+                    }
                 </div>
             </div>
         </div>

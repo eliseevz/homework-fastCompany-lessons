@@ -1,5 +1,4 @@
 import React from "react"
-import Username from "./Username"
 import PropTypes from "prop-types"
 
 const User = ({
@@ -11,7 +10,7 @@ const User = ({
 }) => {
     return (
         <tr className="personElement" id={user._id}>
-            <Username user={user} />
+            <th scope="row">{user.name}</th>
             <td>{qualitiesHundler(user.qualities)}</td>
             <td>{user.profession.name}</td>
             <td>{user.completedMeetings}</td>

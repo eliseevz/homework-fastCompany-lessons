@@ -1,13 +1,11 @@
 import React from "react"
 import PropTypes from "prop-types"
-import TableHeader from "./TableHeader";
-import TableBody from "./TableBody";
-import BookMark from "./Bookmark";
-import QualitiesList from "./qualitiesList";
-import Table from "./table";
+import BookMark from "../common/Bookmark";
+import QualitiesList from "./qualities/qualitiesList";
+import Table, {TableBody, TableHeader} from "../common/Table";
 import {Link} from "react-router-dom";
 
-const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHundler, qualitiesHundler, ...rest}) => {
+const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHundler, qualitiesHundler}) => {
     const columns = {
         name: {path: "name", name: "Имя", component: (user) => <Link to={`/users/${user._id}`}> {user.name} </Link>},
         qualities: {name: "Качества", component: (user) => <QualitiesList qualities={user.qualities}/>},

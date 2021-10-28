@@ -1,4 +1,4 @@
-import { professionsObject as professions } from "./professions.api"
+import { professionsObject as professions } from "./professions.api";
 const qualities = {
     tedious: {
         _id: "67rdca3eeb7f6fgeed471198",
@@ -26,11 +26,11 @@ const qualities = {
         color: "info"
     },
     uncertain: {
-        _id: "67rdca3eeb7f6fgeed471102",
+        _id: "67rdca3eeb7f6fgeed471103",
         name: "Неуверенный",
         color: "dark"
     }
-}
+};
 
 const users = [
     {
@@ -57,8 +57,8 @@ const users = [
         profession: professions.doctor,
         qualities: [qualities.buller],
         completedMeetings: 247,
-        bookmark: false,
-        rate: 3.5
+        rate: 3.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471818",
@@ -66,8 +66,8 @@ const users = [
         profession: professions.waiter,
         qualities: [qualities.uncertain],
         completedMeetings: 148,
-        bookmark: false,
-        rate: 3.5
+        rate: 3.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471819",
@@ -75,8 +75,8 @@ const users = [
         profession: professions.physics,
         qualities: [qualities.strange, qualities.tedious],
         completedMeetings: 37,
-        bookmark: false,
-        rate: 4.6
+        rate: 4.6,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471820",
@@ -84,8 +84,8 @@ const users = [
         profession: professions.physics,
         qualities: [qualities.strange, qualities.uncertain],
         completedMeetings: 147,
-        bookmark: false,
-        rate: 3.5
+        rate: 3.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471821",
@@ -93,8 +93,8 @@ const users = [
         profession: professions.engineer,
         qualities: [qualities.strange, qualities.tedious],
         completedMeetings: 72,
-        bookmark: false,
-        rate: 3.5
+        rate: 3.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471822",
@@ -102,26 +102,26 @@ const users = [
         profession: professions.engineer,
         qualities: [qualities.handsome],
         completedMeetings: 72,
-        bookmark: false,
-        rate: 5
+        rate: 5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471823",
         name: "Моника Геллер",
         profession: professions.cook,
         qualities: [qualities.strange, qualities.uncertain],
-        bookmark: false,
         completedMeetings: 17,
-        rate: 4.5
+        rate: 4.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed471824",
         name: "Рататуй",
         profession: professions.cook,
         qualities: [qualities.handsome, qualities.buller],
-        bookmark: false,
         completedMeetings: 17,
-        rate: 4.5
+        rate: 4.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed47181f",
@@ -129,8 +129,8 @@ const users = [
         profession: professions.actor,
         qualities: [qualities.uncertain, qualities.strange],
         completedMeetings: 434,
-        bookmark: false,
-        rate: 3.5
+        rate: 3.5,
+        bookmark: false
     },
     {
         _id: "67rdca3eeb7f6fgeed47181r",
@@ -138,26 +138,25 @@ const users = [
         profession: professions.actor,
         qualities: [qualities.handsome],
         completedMeetings: 434,
-        bookmark: false,
-        rate: 5
+        rate: 5,
+        bookmark: false
     }
-]
+];
 
 const fetchAll = () =>
     new Promise((resolve) => {
         window.setTimeout(function () {
-            resolve(users)
-        }, 2000)
-    })
+            resolve(users);
+        }, 2000);
+    });
 
 const getById = (id) =>
     new Promise((resolve) => {
         window.setTimeout(function () {
-            resolve(users.find((user) => user._id === id))
-        }, 1000)
-    })
-
+            resolve(users.find((user) => user._id === id));
+        }, 1000);
+    });
 export default {
     fetchAll,
     getById
-}
+};
