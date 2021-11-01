@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import PropTypes from "prop-types"
 
-const TextField = ({label, type, name, value, onChange, error}) => {
+const TextField = ({label, type, name, value, onChange, error, textarea = false, rows = 0}) => {
 
     const [showPassword, setShowPassword] = useState(false)
 
     const handleChange = ({target}) => {
+        console.log(target, " target from textfield")
         onChange({name: target.name, value: target.value})
     }
 
@@ -21,14 +22,28 @@ const TextField = ({label, type, name, value, onChange, error}) => {
         <div className="mb-4">
             <label htmlFor={name}>{label}</label>
             <div className="input-group has-validation">
-                <input
-                    className={getInputClasses()}
-                    type={showPassword ? "text" : type}
-                    id={name}
-                    name={name}
-                    value={value}
-                    onChange={handleChange}
-                />
+                {
+                    textarea
+                        ? <textarea
+                            className={getInputClasses()}
+                            type={showPassword ? "text" : type}
+                            id={name}
+                            name={name}
+                            value={value}
+                            rows={rows}
+                            resize="none"
+                            onChange={handleChange}
+                        />
+                        :<input
+                            className={getInputClasses()}
+                            type={showPassword ? "text" : type}
+                            id={name}
+                            name={name}
+                            value={value}
+                            onChange={handleChange}
+                        />
+
+                }
                 {
                     type === "password" && (
                         <button

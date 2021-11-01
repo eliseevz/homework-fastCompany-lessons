@@ -7,10 +7,12 @@ import NavBar from "./components/UI/navBar";
 import Login from "./layouts/login";
 import Main from "./layouts/main";
 import UserProfile from "./components/page/userPage/UserPage";
+import EditUser from "./components/page/editUserPage/editUser";
 
 const App = () => {
     const routing = (
         <Switch>
+            <Route path="/users/:userId/edit" component={EditUser}/>
             <Route path="/users/:userId?" component={Users}/>
             {/*<Route path="/users" component={(params) => users ? <Users params={params} users={users} setUsers={setUsers}></Users> : <Loader/>} />*/}
             <Route path="/login/:type?" component={Login}/>

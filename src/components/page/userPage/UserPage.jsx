@@ -1,11 +1,19 @@
 import React, {useEffect, useState} from "react"
 import api from "../../../API"
 import Loader from "../../Loader/Loader";
-import {Link} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
+import UserInfo from "../../UI/UserPageUI/UserInfo";
+import UserQualities from "../../UI/UserPageUI/UserQualities";
+import UserCompletedMeetings from "../../UI/UserPageUI/UserCompletedMeeting";
+import UserNewComment from "../../UI/UserPageUI/UserNewComment";
+import UserCommentsList from "../../UI/UserPageUI/UserCommentsList";
+import UserComments from "../../UI/UserPageUI/UserComments";
 
-const UserPage = ({userId}) => {
+const UserPage = () => {
 
     const {getById} = api.users
+
+    const {userId} = useParams()
 
     const [user, setUser] = useState(undefined)
 
@@ -21,24 +29,26 @@ const UserPage = ({userId}) => {
 
     return (
         user
-            ? <div>
-                <h1> {user.name} </h1>
-                <h2>Профессия: {user.profession.name}</h2>
-                <div>
-                    {user.qualities.map((item, index) => {
-                        return (
-                            <span
-                                key={index}
-                                className={`badge bg-${item.color}`}
-                                style={{fontSize: 15, margin: 5}}
-                            >
-                                {item.name}
-                            </span>)
-                    })}
+            ? <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 mb-3">
+                        <UserInfo
+                            name={user.name}
+                            profession={user.profession}
+                            rate={user.rate}
+                            userId={user._id}
+                        />
+                        <UserQualities
+                            qualities = {user.qualities}
+                        />
+                        <UserCompletedMeetings
+                            meetings={user.completedMeetings}
+                        />
+                    </div>
+                    <div className="col-md-8">
+                        <UserComments userId = {userId}/>
+                    </div>
                 </div>
-                <p>Встреч: {user.completedMeetings}</p>
-                <h2>Rate: {user.rate}</h2>
-                <Link className="btn btn-secondary" to="/users"> Все пользователи</Link>
             </div>
             : <Loader />
     )
