@@ -130,7 +130,7 @@ const UsersListPage = () => {
                     : <Loader/>
                 }
                 <div className="d-flex flex-column">
-                    <Phrase renderPhrase={renderPhrase} users={filteredUsers} />
+                    <Phrase renderPhrase={renderPhrase} users={searchedUsers} />
                     <SearchUser onSearch={handleSearch} search={search} />
                     <UserTable
                         users={userCrop}

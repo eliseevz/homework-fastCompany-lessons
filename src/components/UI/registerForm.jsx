@@ -121,6 +121,7 @@ const RegisterForm = () => {
                 defaultOption="Choose.."
                 options={professions}
                 onChange={handleChange}
+                name="profession"
             />
             <RadioField
                 options={[
