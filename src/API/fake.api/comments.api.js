@@ -74,6 +74,7 @@ const remove = (id) =>
             resolve(id);
         }, 200);
     });
+
 export default {
     fetchAll,
     fetchCommentsForUser,

@@ -8,16 +8,23 @@ import Login from "./layouts/login";
 import Main from "./layouts/main";
 import UserProfile from "./components/page/userPage/UserPage";
 import EditUser from "./components/page/editUserPage/editUser";
+import {ToastContainer} from "react-toastify";
+import {ProfessionProvider} from "./hooks/useProfession";
+import {QualitiesProvider} from "./hooks/useQualities";
 
 const App = () => {
     const routing = (
         <Switch>
-            <Route path="/users/:userId/edit" component={EditUser}/>
-            <Route path="/users/:userId?" component={Users}/>
-            {/*<Route path="/users" component={(params) => users ? <Users params={params} users={users} setUsers={setUsers}></Users> : <Loader/>} />*/}
-            <Route path="/login/:type?" component={Login}/>
+            <QualitiesProvider>
+                <ProfessionProvider>
+                    <Route path="/users/:userId/edit" component={EditUser}/>
+                    <Route path="/users/:userId?" component={Users}/>
+                    <Route path="/login/:type?" component={Login}/>
+                </ProfessionProvider>
+            </QualitiesProvider>
             <Route path="/" exact component={Main}/>
             <Redirect to="/"/>
+            <ToastContainer />
         </Switch>
     )
 

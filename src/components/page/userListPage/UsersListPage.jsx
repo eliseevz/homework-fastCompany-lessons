@@ -8,16 +8,19 @@ import Loader from "../../Loader/Loader";
 import UserTable from "../../UI/UsersTable";
 import _ from "lodash"
 import SearchUser from "../../searchUser";
+import {useUser} from "../../../hooks/useUsers";
 
 const UsersListPage = () => {
-    const [users, setUsers] = useState()
+    // const [users, setUsers] = useState()
+    const { users } = useUser()
+    console.log(users)
 
-    useEffect(()=> {
-        api.users.fetchAll()
-            .then(data => {
-                setUsers(data)
-            })
-    },[])
+    // useEffect(()=> {
+    //     api.users.fetchAll()
+    //         .then(data => {
+    //             setUsers(data)
+    //         })
+    // },[])
 
     const pageSize = 8
     const [currentPage, setCurrentPage] = useState(1)
@@ -29,14 +32,15 @@ const UsersListPage = () => {
 
     const handleToggleBookMark = (id) => {
         console.log("this handleToggleBookMark and ID: ", id)
-        setUsers(
-            users.map(item => {
-                if (item._id === id) {
-                    return {...item, bookmark: !item.bookmark}
+
+        const newArray = users.map(item => {
+                    if (item._id === id) {
+                        return {...item, bookmark: !item.bookmark}
+                    }
+                    return item
                 }
-                return item
-            })
         )
+        console.log(newArray)
     }
 
     const handleSearch = (e) => {
@@ -64,13 +68,14 @@ const UsersListPage = () => {
     }
 
     const removeHundler = (id) => {
-        const newUsers = []
-        users.forEach((item) => {
-            if (item._id !== id) {
-                newUsers.push(item)
-            }
-        })
-        setUsers(newUsers)
+        // const newUsers = []
+        // users.forEach((item) => {
+        //     if (item._id !== id) {
+        //         newUsers.push(item)
+        //     }
+        // })
+        // setUsers(newUsers)
+        console.log(id)
     }
 
     const handlePageChange = (pageIndex) => {

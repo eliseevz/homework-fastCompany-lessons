@@ -4,12 +4,13 @@ import BookMark from "../common/Bookmark";
 import QualitiesList from "./qualities/qualitiesList";
 import Table, {TableBody, TableHeader} from "../common/Table";
 import {Link} from "react-router-dom";
+import Profession from "./profession";
 
 const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHundler, qualitiesHundler}) => {
     const columns = {
         name: {path: "name", name: "Имя", component: (user) => <Link to={`/users/${user._id}`}> {user.name} </Link>},
         qualities: {name: "Качества", component: (user) => <QualitiesList qualities={user.qualities}/>},
-        professions: {path: "profession.name", name: "Профессия"},
+        professions: {name: "Профессия", component: (user) => <Profession id={user.profession}/>},
         completedMeetings: {path: "completedMeetings", name: "Встретился, раз"},
         rate: {path: "rate", name: "Оценка"},
         bookmark:
@@ -31,6 +32,7 @@ const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHun
                 </button>
             )}
     }
+    console.log("USERTABLE")
     return (
 
             <Table onSort={onSort} selectedSort={selectedSort} columns={columns} data={users}>
