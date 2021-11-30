@@ -15,6 +15,8 @@ const SelectField = ({label, value, onChange, defaultOption, options, error, nam
         ? Object.keys(options).map(optionName => ({name: options[optionName].name, value: options[optionName]}))
         : options
 
+    console.log(optionsArray)
+
 
     return (
         <div className="mb-4">

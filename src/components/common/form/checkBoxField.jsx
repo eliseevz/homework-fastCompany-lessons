@@ -11,9 +11,6 @@ const CheckBoxField = ({name, value, onChange, children, error}) => {
         return 'form-check-input' + (error ? " is-invalid" : "")
     }
 
-    console.log(error, " error in checboxfield")
-
-
     return (
         <div className="form-check mb-4">
             <input

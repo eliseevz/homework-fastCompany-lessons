@@ -9,29 +9,33 @@ import Main from "./layouts/main";
 import UserProfile from "./components/page/userPage/UserPage";
 import EditUser from "./components/page/editUserPage/editUser";
 import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import {ProfessionProvider} from "./hooks/useProfession";
 import {QualitiesProvider} from "./hooks/useQualities";
+import AuthProvider from "./hooks/useAuth";
 
 const App = () => {
     const routing = (
-        <Switch>
-            <QualitiesProvider>
-                <ProfessionProvider>
-                    <Route path="/users/:userId/edit" component={EditUser}/>
-                    <Route path="/users/:userId?" component={Users}/>
-                    <Route path="/login/:type?" component={Login}/>
-                </ProfessionProvider>
-            </QualitiesProvider>
-            <Route path="/" exact component={Main}/>
-            <Redirect to="/"/>
-            <ToastContainer />
-        </Switch>
-    )
+        <AuthProvider>
+            <ProfessionProvider>
+                <QualitiesProvider>
+                    <Switch>
+                        <Route path="/users/:userId/edit" component={EditUser}/>
+                        <Route path="/users/:userId?" component={Users}/>
+                        <Route path="/login/:type?" component={Login}/>
+                        <Route path="/" exact component={Main}/>
+                        <Redirect to="/"/>
+                    </Switch>
+                    <ToastContainer/>
+                </QualitiesProvider>
+            </ProfessionProvider>
+        </AuthProvider>
+)
 
     return (
         <BrowserRouter>
-                <NavBar></NavBar>
-                { routing }
+            <NavBar></NavBar>
+            {routing}
         </BrowserRouter>
     )
 }

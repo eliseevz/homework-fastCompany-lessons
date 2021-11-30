@@ -3,6 +3,10 @@ import React, {useEffect, useState} from 'react';
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import * as yup from 'yup';
+import {useAuth} from "../../hooks/useAuth";
+import {toast} from "react-toastify";
+import {useHistory} from "react-router-dom"
+
 
 const LoginForm = () => {
     const [data, setData] = useState({
@@ -11,6 +15,10 @@ const LoginForm = () => {
         stayOn: false
     })
     const [errors, setErrors] = useState({})
+
+    const {signIn} = useAuth()
+
+    const history = useHistory()
 
     const validate = () => {
         // const errors = validator(data, validatorConfig)
@@ -25,7 +33,7 @@ const LoginForm = () => {
         password: yup.string().required("пароль обязателен для заполнения")
             .matches(/(?=.*[A-Z])/, "Пароль должен содержать заглавную букву")
             .matches(/(?=.*[0-9])/, "Пароль должен содержать хотя бы одну цифру")
-            .matches(/(?=.*[!@*$%^&*])/, "Пароль должен содержать один из специальных символов !@*$%^&*")
+            // .matches(/(?=.*[!@*$%^&*])/, "Пароль должен содержать один из специальных символов !@*$%^&*")
             .matches(/(?=.{8,})/, "Пароль должен состоять минимум из 8 символов"),
         email: yup.string().required("Электронная почта обязательна для заполнения").email("Email введен некорректно")
     })
@@ -67,11 +75,18 @@ const LoginForm = () => {
         })))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        console.log(data)
+        try {
+           await signIn(data)
+            toast.success("Успешная авторизация")
+            history.push("/")
+        } catch (e) {
+            console.log(e, ' this is error in loginForm')
+            setErrors(e)
+        }
     }
 
     return (

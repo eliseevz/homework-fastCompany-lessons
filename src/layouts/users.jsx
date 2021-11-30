@@ -7,7 +7,6 @@ import UsersListPage from "../components/page/userListPage";
 import {UserProvider} from "../hooks/useUsers";
 
 const Users = () => {
-    console.log('HELLO WORLD')
     const params = useParams()
     const {userId} = params
     console.log(userId)

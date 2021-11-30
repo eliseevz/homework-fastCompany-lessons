@@ -15,7 +15,6 @@ export const QualitiesProvider = ({children}) => {
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        console.log("USEEFFECT IN USEQUALITIES")
         fetchQualities()
     }, [])
 
