@@ -13,9 +13,8 @@ const SelectField = ({label, value, onChange, defaultOption, options, error, nam
 
     const optionsArray = !Array.isArray(options)&&typeof options === "object"
         ? Object.keys(options).map(optionName => ({name: options[optionName].name, value: options[optionName]}))
-        : options
+        : options.map(item => ({name: item.name, value: item._id}))
 
-    console.log(optionsArray)
 
 
     return (

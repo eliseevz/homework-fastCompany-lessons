@@ -39,6 +39,7 @@ export const ProfessionProvider = ({children}) => {
     }
 
     const getProfession = (id) => {
+        console.log(id, ' id of fetch')
         return professions.find(prof => prof._id === id)
     }
 

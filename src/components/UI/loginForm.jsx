@@ -19,15 +19,14 @@ const LoginForm = () => {
     const {signIn} = useAuth()
 
     const history = useHistory()
+    console.log(history, ' this is history')
 
     const validate = () => {
-        // const errors = validator(data, validatorConfig)
         validateScheme.validate(data).then(()=>setErrors({})).catch((err) => setErrors({[err.path]: err.message}))
         return Object.keys(errors).length === 0
     }
 
     const isValid = Object.keys(errors).length === 0
-    console.log(isValid, " is valid")
 
     let validateScheme = yup.object().shape({
         password: yup.string().required("пароль обязателен для заполнения")
@@ -82,7 +81,11 @@ const LoginForm = () => {
         try {
            await signIn(data)
             toast.success("Успешная авторизация")
-            history.push("/")
+            console.log(history.location)
+            history.push(history.location.state
+                ? history.location.state.pathname
+                : "/"
+            )
         } catch (e) {
             console.log(e, ' this is error in loginForm')
             setErrors(e)

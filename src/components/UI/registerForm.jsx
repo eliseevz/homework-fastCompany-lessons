@@ -16,14 +16,15 @@ const RegisterForm = () => {
         password: "",
         profession: "",
         sex: "male",
+        name: "",
         qualities: [],
         licence: false
     })
     const [errors, setErrors] = useState({})
     const {qualities} = useQualities()
-    const qualitiesList = qualities.map(q => ({label: q.name, value: q._id}))
+    // const qualitiesList = qualities.map(q => ({label: q.name, value: q._id}))
     const {professions} = useProfessions()
-    const professionsList = professions.map(p => ({name: p.name, value: p}))
+    // const professionsList = professions.map(p => ({name: p.name, value: p}))
 
     const history = useHistory()
 
@@ -42,6 +43,15 @@ const RegisterForm = () => {
             },
             isEmail: {
                 message: "Email введен некорректно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения"
+            },
+            min: {
+                message: "Имя должно быть хотя бы 2 символа",
+                value: 2
             }
         },
         password: {
@@ -90,12 +100,12 @@ const RegisterForm = () => {
         event.stopPropagation()
         const isValid = validate()
         if (!isValid) return
-        const newData = {
-            ...data,
-            profession: data.profession._id
-        }
+        // const newData = {
+        //     ...data,
+        //     profession: data.profession._id
+        // }
         try {
-            await signUp(newData)
+            await signUp(data)
             history.push("/")
         } catch (e) {
             setErrors(e)
@@ -113,6 +123,14 @@ const RegisterForm = () => {
                 error={errors.email}
             />
             <TextField
+                label="Имя"
+                type="text"
+                name="name"
+                value={data.name}
+                onChange={handleChange}
+                error={errors.name}
+            />
+            <TextField
                 label="Пароль"
                 type="password"
                 name="password"
@@ -125,7 +143,7 @@ const RegisterForm = () => {
                 label="Выберите вашу профессию"
                 error={errors.profession}
                 defaultOption="Choose.."
-                options={professionsList}
+                options={professions}
                 onChange={handleChange}
                 name="profession"
             />
@@ -142,7 +160,7 @@ const RegisterForm = () => {
             />
             <MultiSelectField
                 onChange={handleChange}
-                options={qualitiesList}
+                options={qualities}
                 name="qualities"
                 label="Выберите свои качества"
             />

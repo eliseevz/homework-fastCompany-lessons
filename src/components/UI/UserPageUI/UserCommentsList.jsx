@@ -5,30 +5,16 @@ import {useParams} from "react-router-dom"
 import CommentComponent from "./CommentComponent";
 import Loader from "../../Loader/Loader";
 import _ from "lodash"
+import {useComments} from "../../../hooks/useComments";
 
 const UserCommentsList = ({comments, setComments}) => {
 
     const [users, setUsers] = useState()
 
-    const {fetchCommentsForUser, remove} = commentsAPI
-    const {fetchAll:fetchAllUsers} = usersAPI
-
-    const {userId} = useParams()
-
-    useEffect(() => {
-        fetchCommentsForUser(userId)
-            .then(data => setComments(data))
-            .catch(err => console.log(err))
-        fetchAllUsers()
-            .then(data => setUsers(data))
-            .catch(err => console.log(err))
-    }, [])
+    const {removeComment} = useComments()
 
     const onRemoveHandler = async (id) => {
-        const removedId = await remove(id)
-        // const newComments = await fetchCommentsForUser(id)
-        const newComments = comments.filter(comment => comment._id !== removedId)
-        setComments(newComments)
+        const response = await removeComment(id)
     }
 
     const sortedComments = comments
@@ -38,9 +24,7 @@ const UserCommentsList = ({comments, setComments}) => {
     return (
         <div>
             {
-                comments && users
-                    ? sortedComments.map(comment => (<CommentComponent onDelete={onRemoveHandler} users={users} comment={comment}/>))
-                    : <Loader/>
+                sortedComments.map(comment => (<CommentComponent key={comment._id} onDelete={onRemoveHandler} users={users} comment={comment}/>))
             }
         </div>
     );

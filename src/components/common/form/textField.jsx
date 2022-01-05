@@ -6,7 +6,6 @@ const TextField = ({label, type, name, value, onChange, error, textarea = false,
     const [showPassword, setShowPassword] = useState(false)
 
     const handleChange = ({target}) => {
-        console.log(target, " target from textfield")
         onChange({name: target.name, value: target.value})
     }
 

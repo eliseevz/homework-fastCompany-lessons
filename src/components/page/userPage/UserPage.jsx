@@ -8,23 +8,27 @@ import UserCompletedMeetings from "../../UI/UserPageUI/UserCompletedMeeting";
 import UserNewComment from "../../UI/UserPageUI/UserNewComment";
 import UserCommentsList from "../../UI/UserPageUI/UserCommentsList";
 import UserComments from "../../UI/UserPageUI/UserComments";
+import {useUser} from "../../../hooks/useUsers";
+import CommentsProvider from "../../../hooks/useComments";
+import UserProfession from "../../UI/UserPageUI/UserProfession";
 
 const UserPage = () => {
 
-    const {getById} = api.users
-
     const {userId} = useParams()
+    console.log(userId, ' id from UserPage')
 
     const [user, setUser] = useState(undefined)
+    const {getUserById} = useUser()
 
     useEffect(() => {
+        console.log("useEffect")
         getUser()
-    }, [])
+    }, [userId])
 
     const getUser = async () => {
-        const resp = await getById(userId)
-        setUser(resp)
-        console.log(resp)
+        const user = getUserById(userId)
+        console.log("this is user: ", user);
+        setUser(user)
     }
 
     return (
@@ -37,16 +41,22 @@ const UserPage = () => {
                             profession={user.profession}
                             rate={user.rate}
                             userId={user._id}
+                            image={user.image}
                         />
                         <UserQualities
                             qualities = {user.qualities}
+                        />
+                        <UserProfession
+                            profession={user.profession}
                         />
                         <UserCompletedMeetings
                             meetings={user.completedMeetings}
                         />
                     </div>
                     <div className="col-md-8">
-                        <UserComments userId = {userId}/>
+                        <CommentsProvider>
+                            <UserComments userId = {userId}/>
+                        </CommentsProvider>
                     </div>
                 </div>
             </div>

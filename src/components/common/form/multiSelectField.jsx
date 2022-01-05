@@ -6,15 +6,16 @@ import SelectField from "./selectField";
 const MultiSelectField = ({options, onChange, name, label, value}) => {
 
     const optionsArray = !Array.isArray(options) && typeof options === "object"
-        ? Object.keys(options).map(optionName => ({label: options[optionName].name, value: options[optionName]}))
-        : options
+        ? Object.keys(options).map(optionName => ({label: options[optionName].name, value: options[optionName]._id}))
+        : options.map(q => ({label: q.name, value: q._id}))
+
 
     let defaultOptions = []
 
     if (value) {
         value.forEach(quality => {
             defaultOptions.push({
-                label: quality.name, value: quality
+                label: quality.name, value: quality._id
             })
         })
     }

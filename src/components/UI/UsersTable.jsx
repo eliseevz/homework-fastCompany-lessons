@@ -21,18 +21,7 @@ const UserTable = ({users, onSort, selectedSort, handleToggleBookMark, removeHun
                     onClick={() => handleToggleBookMark(user._id)}
                 />)
             },
-        delete: {component: (user) => (
-                <button
-                    onClick={() => {
-                        removeHundler(user._id)
-                    }}
-                    className="btn btn-danger"
-                >
-                    Delete
-                </button>
-            )}
     }
-    console.log("USERTABLE")
     return (
 
             <Table onSort={onSort} selectedSort={selectedSort} columns={columns} data={users}>

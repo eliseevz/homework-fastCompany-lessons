@@ -3,28 +3,25 @@ import SelectField from "../../common/form/selectField";
 import TextField from "../../common/form/textField";
 import api from "../../../API"
 import {validator} from "../../../utils/validator";
+import {useComments} from "../../../hooks/useComments";
+import {useAuth} from "../../../hooks/useAuth";
 
 
 const UserNewComment = ({pageId, comments, setComments}) => {
 
-    const {fetchAll} = api.users
-    const {add} = api.comments
+    const {currentUser} = useAuth()
 
     const dataInitialState = {
-        userId: "",
+        userId: currentUser._id,
         content: ""
     }
 
     const [data, setData] = useState(dataInitialState)
     const [errors, setErrors] = useState({})
-    const [users, setUsers] = useState({})
+
+    const {createComment} = useComments()
 
     const validateConfig = {
-        userId: {
-            isRequired: {
-                message: "Поле обязательно для ввода"
-            }
-        },
         content: {
             isRequired: {
                 message: "Поле обязательно для ввода"
@@ -42,50 +39,27 @@ const UserNewComment = ({pageId, comments, setComments}) => {
         validate()
     }, [data])
 
-    useEffect(() => {
-        fetchAll()
-            .then(data => setUsers({...data}))
-            .catch(err => console.log(err))
-    }, [])
-
     const handleChange = (target) => {
-        console.log(target, " target in handle")
         setData(prevState => ({
             ...prevState,
             [target.name]: target.value
         }))
-        console.log(data, ' this is data')
+    }
+
+    const clearForm = () => {
+        setData(prevState => ({...prevState, content: ""}))
     }
 
     const submitHandler = (e) => {
         e.preventDefault()
-        const uploadData = {
-            ...data,
-            userId: data.userId._id,
-            pageId
-        }
-        if (validate()) {
-            const result = add(uploadData)
-            setData(dataInitialState)
-            result
-                .then(data => setComments((prevState) => ([...prevState, data])))
-        }
+        createComment(data)
+        clearForm()
     }
 
     return (
         <div>
             <h2>new com</h2>
             <form onSubmit={submitHandler} >
-                <SelectField
-                    label = "Выберите пользователя"
-                    defaultOption="choose..."
-                    value={data.userId}
-                    onChange={handleChange}
-                    options={{...users}}
-                    error={errors.userId}
-                    name="userId"
-
-                />
                 <TextField
                     textarea={true}
                     rows={3}

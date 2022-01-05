@@ -8,45 +8,25 @@ import MultiSelectField from "../../common/form/multiSelectField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import {validator} from "../../../utils/validator";
+import {useAuth} from "../../../hooks/useAuth";
+import {useProfessions} from "../../../hooks/useProfession";
+import {useQualities} from "../../../hooks/useQualities";
 
 const EditUser = () => {
 
     const history = useHistory()
 
-    const {update, getById} = api
-    const { fetchAll:fetchAllProf } = proffessionsAPI
-    const { fetchAll:fetchAllQual } = qualitiesAPI
     const {userId} = useParams();
 
-    const [userData, setUserData] = useState()
-    const [professions, setProfessions] = useState()
-    const [qualities, setQualities] = useState()
+    const {currentUser, updateUser} = useAuth()
+    const [userData, setUserData] = useState(currentUser)
+    const {professions} = useProfessions()
+    const {qualities} = useQualities()
     const [errors, setErrors] = useState({})
 
-    useEffect(() => {
-        getById(userId)
-            .then(data => {
-                console.log(data, " in data")
-                setUserData(data)
-            })
-            .catch((err) => console.log(err))
-        fetchAllProf()
-            .then(dataProf => {
-                setProfessions(dataProf)
-            })
-            .catch((err) => console.log(err))
-        fetchAllQual()
-            .then(dataQual => {
-                setQualities(dataQual)
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }, [])
 
     useEffect(() => {
         if (userData) {
-            console.log(userData, " and next validate")
             validate()
         }
     }, [userData])
@@ -79,27 +59,34 @@ const EditUser = () => {
     }
 
     const handleChange = (target) => {
-        console.log(target, ' target')
         setUserData((prevState => ({
             ...prevState,
             [target.name]: target.value
         })))
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault()
         const isValid = validate()
         if (isValid) {
-            console.log("ПУШИМ ОБНОВЛЕНИЯ")
-            console.log(userData, " out data")
-            update(userId, userData)
+            await updateUser(userData)
+            // console.log("ПУШИМ ОБНОВЛЕНИЯ")
+            // console.log(userData, " out data")
+            // update(userId, userData)
             history.push(`/users/${userId}`)
         }
     }
 
+    const getQualities = (id) => {
+        const findQualities = id.map(qId => {
+            return qualities.find(quality => quality._id === qId)
+        })
+        return findQualities
+    }
+
     return (
         <div>
-            {userData
+            {userData && professions && qualities
                 ?  <div className="container mt-5">
                     <button
                         onClick={() => history.push(`/users/${userId}`)}
@@ -147,7 +134,7 @@ const EditUser = () => {
                                 <MultiSelectField
                                     onChange={handleChange}
                                     options={qualities}
-                                    value={userData.qualities}
+                                    value={getQualities(userData.qualities)}
                                     name="qualities"
                                     label="Выберите свои качества"
                                 />

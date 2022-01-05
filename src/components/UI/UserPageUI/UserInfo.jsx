@@ -1,19 +1,31 @@
 import React from 'react';
 import Avatar from "../../../utils/Avatar";
 import {useHistory} from "react-router-dom"
+import {useAuth} from "../../../hooks/useAuth";
 
-const UserInfo = ({name, rate, profession, userId}) => {
+const UserInfo = ({name, rate, profession, userId, image}) => {
 
     const history = useHistory()
+    const {currentUser} = useAuth()
 
     return (
         <div className="card mb-3">
             <div className="card-body">
-                <button onClick={() => history.push(`/users/${userId}/edit`)} className="position-absolute top-0 end-0 btn btn-light btn-sm">
-                    <i className="bi bi-gear"></i>
-                </button>
+                {
+                    currentUser._id === userId &&
+                        <button onClick={() => history.push(`/users/${userId}/edit`)}
+                             className="position-absolute top-0 end-0 btn btn-light btn-sm">
+                            <i className="bi bi-gear"></i>
+                        </button>
+                }
                 <div className="d-flex flex-column align-items-center text-center position-relative">
-                    <Avatar size={150} />
+                    <img
+                        src={image}
+                        className="rounded-circle shadow-1-strong me-3"
+                        alt="avatar"
+                        width={150}
+                        height={150}
+                    />
                     <div className="mt-3">
                         <h4>{name}</h4>
                         <p className="text-secondary mb-1">{profession.name}</p>

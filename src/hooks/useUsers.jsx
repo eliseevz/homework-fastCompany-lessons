@@ -29,6 +29,7 @@ export const UserProvider = ({children}) => {
     const getUsers = async () => {
         try {
             const {content} = await userService.get()
+            console.log(content, ' content in useUSer')
             setUsers(content)
             setLoading(false)
         } catch (e) {
@@ -42,8 +43,12 @@ export const UserProvider = ({children}) => {
         setLoading(false)
     }
 
+    const getUserById = (id) => {
+        return users.find((user) => user._id === id)
+    }
+
     return (
-        <UserContext.Provider value={{users}}>
+        <UserContext.Provider value={{users, getUserById}}>
             {
                 !isLoading
                 ? children

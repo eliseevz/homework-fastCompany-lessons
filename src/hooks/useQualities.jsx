@@ -21,7 +21,6 @@ export const QualitiesProvider = ({children}) => {
     const fetchQualities = async () => {
         try {
             const {content} = await qualitiesService.fetchAll()
-            console.log(content, ' this is content FROM FETCH')
             setQualities(content)
             setLoading(false)
         } catch (e) {

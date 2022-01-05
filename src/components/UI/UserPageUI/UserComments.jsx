@@ -1,9 +1,11 @@
 import React, {useState} from 'react';
 import UserNewComment from "./UserNewComment";
 import UserCommentsList from "./UserCommentsList";
+import {useComments} from "../../../hooks/useComments";
 
 const UserComments = ({userId}) => {
-    const [comments, setComments] = useState()
+    // const [comments, setComments] = useState()
+    const {comments} = useComments()
     return (
         <div>
             <div className="card mb-2">
@@ -12,7 +14,7 @@ const UserComments = ({userId}) => {
                     <UserNewComment
                         pageId={userId}
                         comments={comments}
-                        setComments={setComments}
+                        // setComments={setComments}
                     />
                 </div>
             </div>
@@ -22,7 +24,7 @@ const UserComments = ({userId}) => {
                     <hr/>
                     <UserCommentsList
                         comments={comments}
-                        setComments={setComments}
+                        // setComments={setComments}
                     />
                 </div>
             </div>

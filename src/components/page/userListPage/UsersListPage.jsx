@@ -9,29 +9,23 @@ import UserTable from "../../UI/UsersTable";
 import _ from "lodash"
 import SearchUser from "../../searchUser";
 import {useUser} from "../../../hooks/useUsers";
+import {useProfessions} from "../../../hooks/useProfession";
+import {useAuth} from "../../../hooks/useAuth";
 
 const UsersListPage = () => {
-    // const [users, setUsers] = useState()
-    const { users } = useUser()
-    console.log(users)
 
-    // useEffect(()=> {
-    //     api.users.fetchAll()
-    //         .then(data => {
-    //             setUsers(data)
-    //         })
-    // },[])
+    const { users } = useUser()
+    const {currentUser} = useAuth()
 
     const pageSize = 8
     const [currentPage, setCurrentPage] = useState(1)
-    const [professions, setProfessions] = useState()
+    const {professions, isLoading:professionsLoading} = useProfessions()
     const [selectedProf, setSelectedProf] = useState()
     const [sortBy, setSortBy] = useState({path: "name", order: "asc"})
     const [search, setSearch] = useState("")
 
 
     const handleToggleBookMark = (id) => {
-        console.log("this handleToggleBookMark and ID: ", id)
 
         const newArray = users.map(item => {
                     if (item._id === id) {
@@ -83,10 +77,10 @@ const UsersListPage = () => {
         setCurrentPage(pageIndex)
     }
 
-    useEffect(() => {
-        console.log("useEffect started")
-        api.professions.fetchAll().then((data) => setProfessions(data))
-    }, [])
+    // useEffect(() => {
+    //     console.log("useEffect started")
+    //     api.professions.fetchAll().then((data) => setProfessions(data))
+    // }, [])
 
     useEffect(() => {
         setCurrentPage(1)
@@ -104,10 +98,10 @@ const UsersListPage = () => {
     }
 
     if (users) {
-
+        const data = users.filter((user) => user._id !== currentUser._id)
         const filteredUsers = selectedProf
-            ? users.filter((user) => user.profession._id === selectedProf._id)
-            : users
+            ? data.filter((user) => user.profession._id === selectedProf._id)
+            : data
         const sortedUsers = _.orderBy(filteredUsers, [sortBy.path], [sortBy.order])
         const searchedUsers = search
             ? users.filter((user) => user.name.toLowerCase().includes(search.toLowerCase()))
@@ -116,7 +110,7 @@ const UsersListPage = () => {
 
         return (
             <div className="d-flex">
-                {professions
+                {professions && !professionsLoading
                     ? (
                         <div className="d-flex flex-column flex-shrink-0 p-3">
                             <GroupList
@@ -161,13 +155,6 @@ const UsersListPage = () => {
             loading
         </div>
     )
-    // ) : (
-    //     <Phrase
-    //         renderPhrase={renderPhrase}
-    //         users={users}
-    //         isNullUsers={true}
-    //     />
-    // )
 }
 
 export default UsersListPage

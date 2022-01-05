@@ -1,10 +1,18 @@
-import React, {useContext, useState} from "react"
+import React, {useContext, useEffect, useState} from "react"
 import PropTypes from "prop-types"
 import axios from "axios";
 import userService from "../services/user.service";
-import { setTokens } from "../services/localStorage.service"
+import localStorageService, { setTokens } from "../services/localStorage.service"
+import {useHistory} from "react-router-dom"
+import {generateAvatarURL} from "../utils/Avatar";
+import httpService from "../services/http.service";
 
-const httpAuth = axios.create()
+export const httpAuth = axios.create({
+    baseURL: "https://identitytoolkit.googleapis.com/v1/",
+    params: {
+        key: process.env.REACT_APP_FIREBASE_KEY
+    }
+})
 const AuthContext = React.createContext()
 
 export const useAuth = () => {
@@ -13,26 +21,32 @@ export const useAuth = () => {
 
 const AuthProvider = ({children}) => {
 
-    const [currentUser, setUser] = useState({})
+    const [currentUser, setUser] = useState()
     const [error, setError] = useState({})
+    const [loading, setLoading] = useState(true)
+    const history = useHistory()
+
+    useEffect(() => {
+        if (localStorageService.getAccesToken()) {
+            getUserData()
+        } else {
+            setLoading(false)
+        }
+    }, [])
 
     const signIn = async ({email, password}) => {
         try {
-            const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`
             const payload = {
                 email,
                 password,
                 returnSecureToken: true
             }
-            const {data} = await httpAuth.post(url, payload)
+            const {data} = await httpAuth.post("accounts:signInWithPassword", payload)
             setTokens(data)
-            console.log(data, ' resp data')
-            console.log('Успешно')
+            await getUserData()
         } catch (e) {
             errorCatcher(e)
-            console.log(e)
             const {code, message} = e.response.data.error
-            console.log(code, message, " THIS ERROR")
             if (code === 400) {
                 if (message === "EMAIL_NOT_FOUND") {
                     const objectError = {
@@ -51,14 +65,26 @@ const AuthProvider = ({children}) => {
 
     }
 
+    const logOut = () => {
+        localStorageService.removeAuthData()
+        setUser(null)
+        history.push("/")
+    }
+
+    const randomInt = (min, max) => {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
+
     const signUp = async ({email, password, ...rest}) => {
-        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${process.env.REACT_APP_FIREBASE_KEY}`
         try {
-            const {data} = await httpAuth.post(url, {email, password, returnSecureToken: true})
+            const {data} = await httpAuth.post("accounts:signUp", {email, password, returnSecureToken: true})
             setTokens(data)
             await createUser({
                 _id: data.localId,
                 email,
+                rate: randomInt(1, 5),
+                completedMeetings: randomInt(1, 200),
+                image: generateAvatarURL(),
                 ...rest
             })
         } catch (e) {
@@ -78,6 +104,7 @@ const AuthProvider = ({children}) => {
     const createUser = async (data) => {
         try {
             const {content} = await userService.create(data)
+            console.log(content);
             setUser(content)
         } catch (e) {
             errorCatcher(e)
@@ -88,11 +115,35 @@ const AuthProvider = ({children}) => {
         const {message} = e.response.data
         setError(message)
     }
+    
+    const getUserData = async () => {
+        try {
+            const {content} = await userService.getCurrentUser()
+            setUser(content)
+            console.log(content, ' this current user')
+            setLoading(false)
+        } catch (e) {
+            errorCatcher(e)
+        }
+    }
+
+    const updateUser = async (data) => {
+        try {
+            const content = await userService.update(data)
+            console.log(content, " content of response")
+            setUser(data)
+        } catch (e) {
+            console.log(e)
+        }
+
+    }
 
     return (
-        <AuthContext.Provider value={{signUp, currentUser, signIn}}>
+        <AuthContext.Provider value={{signUp, currentUser, signIn, logOut, updateUser}}>
             {
-                children
+                !loading
+                ? children
+                : <p>загрузка</p>
             }
         </AuthContext.Provider>
     )
