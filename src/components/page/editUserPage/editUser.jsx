@@ -5,8 +5,6 @@ import MultiSelectField from "../../common/form/multiSelectField";
 import SelectField from "../../common/form/selectField";
 import RadioField from "../../common/form/radioField";
 import {validator} from "../../../utils/validator";
-import {useAuth} from "../../../hooks/useAuth";
-import {useProfessions} from "../../../hooks/useProfession";
 import {useDispatch, useSelector} from "react-redux";
 import {getQualities, getQualitiesLoadingStatus} from "../../../store/qualities";
 import {getProfessions, getProfessionsLoadingStatus} from "../../../store/professions";
@@ -18,7 +16,6 @@ const EditUser = () => {
     const {userId} = useParams();
     const dispatch = useDispatch()
 
-    // const {updateUser} = useAuth()
     const currentUser = useSelector(getCurrentUserData())
     const [userData, setUserData] = useState(currentUser)
     const professions = useSelector(getProfessions())

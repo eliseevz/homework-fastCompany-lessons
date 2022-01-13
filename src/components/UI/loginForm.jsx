@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import TextField from "../common/form/textField";
 import CheckBoxField from "../common/form/checkBoxField";
 import * as yup from 'yup';
-import {useAuth} from "../../hooks/useAuth";
 import {toast} from "react-toastify";
 import {useHistory} from "react-router-dom"
 import {useDispatch, useSelector} from "react-redux";

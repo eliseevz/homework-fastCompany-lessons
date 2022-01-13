@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useAuth} from "../../hooks/useAuth";
-import {generateAvatarURL} from "../../utils/Avatar";
 import {Link} from "react-router-dom";
 import {useSelector} from "react-redux";
 import {getCurrentUserData} from "../../store/users";

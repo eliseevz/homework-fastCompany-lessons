@@ -7,7 +7,6 @@ import Loader from "../../Loader/Loader";
 import UserTable from "../../UI/UsersTable";
 import _ from "lodash"
 import SearchUser from "../../searchUser";
-import {useAuth} from "../../../hooks/useAuth";
 import {useSelector} from "react-redux";
 import {getProfessions, getProfessionsLoadingStatus} from "../../../store/professions";
 import {getCurrentUserId, getUsersList} from "../../../store/users";
