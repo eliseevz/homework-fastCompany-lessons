@@ -13,7 +13,6 @@ const commentService = {
                 equalTo: `"${pageId}"`,
             }
         })
-        console.log(data, ' this is comments fetch')
         return data
     },
     remove: async (id) => {

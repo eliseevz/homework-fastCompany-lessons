@@ -104,7 +104,6 @@ const AuthProvider = ({children}) => {
     const createUser = async (data) => {
         try {
             const {content} = await userService.create(data)
-            console.log(content);
             setUser(content)
         } catch (e) {
             errorCatcher(e)
@@ -120,7 +119,6 @@ const AuthProvider = ({children}) => {
         try {
             const {content} = await userService.getCurrentUser()
             setUser(content)
-            console.log(content, ' this current user')
             setLoading(false)
         } catch (e) {
             errorCatcher(e)
@@ -130,7 +128,6 @@ const AuthProvider = ({children}) => {
     const updateUser = async (data) => {
         try {
             const content = await userService.update(data)
-            console.log(content, " content of response")
             setUser(data)
         } catch (e) {
             console.log(e)

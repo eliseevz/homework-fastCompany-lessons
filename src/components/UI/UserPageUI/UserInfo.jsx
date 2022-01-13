@@ -1,12 +1,12 @@
 import React from 'react';
-import Avatar from "../../../utils/Avatar";
 import {useHistory} from "react-router-dom"
-import {useAuth} from "../../../hooks/useAuth";
+import {useSelector} from "react-redux";
+import {getCurrentUserData} from "../../../store/users";
 
 const UserInfo = ({name, rate, profession, userId, image}) => {
 
     const history = useHistory()
-    const {currentUser} = useAuth()
+    const currentUser = useSelector(getCurrentUserData())
 
     return (
         <div className="card mb-3">

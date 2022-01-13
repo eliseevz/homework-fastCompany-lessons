@@ -5,10 +5,10 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckBoxField from "../common/form/checkBoxField";
-import {useQualities} from "../../hooks/useQualities";
-import {useProfessions} from "../../hooks/useProfession";
-import {useAuth} from "../../hooks/useAuth";
-import {useHistory} from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux";
+import {getQualities, getQualitiesLoadingStatus} from "../../store/qualities";
+import {getProfessions} from "../../store/professions";
+import {signUp} from "../../store/users";
 
 const RegisterForm = () => {
     const [data, setData] = useState({
@@ -21,12 +21,10 @@ const RegisterForm = () => {
         licence: false
     })
     const [errors, setErrors] = useState({})
-    const {qualities} = useQualities()
-    // const qualitiesList = qualities.map(q => ({label: q.name, value: q._id}))
-    const {professions} = useProfessions()
-    // const professionsList = professions.map(p => ({name: p.name, value: p}))
+    const qualities = useSelector(getQualities())
+    const professions = useSelector(getProfessions())
+    const dispatch = useDispatch()
 
-    const history = useHistory()
 
     const validate = () => {
         const errors = validator(data, validatorConfig)
@@ -93,23 +91,13 @@ const RegisterForm = () => {
         })))
     }
 
-    const {signUp} = useAuth()
-
     const handleSubmit = async (event) => {
         event.preventDefault()
         event.stopPropagation()
         const isValid = validate()
         if (!isValid) return
-        // const newData = {
-        //     ...data,
-        //     profession: data.profession._id
-        // }
-        try {
-            await signUp(data)
-            history.push("/")
-        } catch (e) {
-            setErrors(e)
-        }
+        dispatch(signUp(data))
+
     }
 
 

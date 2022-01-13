@@ -1,18 +1,21 @@
 import React, {useState, useEffect} from 'react';
 import SelectField from "../../common/form/selectField";
 import TextField from "../../common/form/textField";
-import api from "../../../API"
 import {validator} from "../../../utils/validator";
 import {useComments} from "../../../hooks/useComments";
-import {useAuth} from "../../../hooks/useAuth";
+import {useDispatch, useSelector} from "react-redux";
+import {getCurrentUserId} from "../../../store/users";
+import {createNewComment} from "../../../store/comments";
+import {nanoid} from "nanoid";
 
 
 const UserNewComment = ({pageId, comments, setComments}) => {
 
-    const {currentUser} = useAuth()
+    const currentUserId = useSelector(getCurrentUserId())
+    const dispatch = useDispatch()
 
     const dataInitialState = {
-        userId: currentUser._id,
+        userId: currentUserId,
         content: ""
     }
 
@@ -52,7 +55,13 @@ const UserNewComment = ({pageId, comments, setComments}) => {
 
     const submitHandler = (e) => {
         e.preventDefault()
-        createComment(data)
+        // createComment(data)
+        dispatch(createNewComment({
+            ...data,
+            pageId: pageId,
+            _id: nanoid(),
+            created_at: Date.now()
+        }))
         clearForm()
     }
 

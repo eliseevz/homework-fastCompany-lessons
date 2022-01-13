@@ -1,23 +1,26 @@
 import React from 'react';
-import {useProfessions} from "../../../hooks/useProfession";
+import {getProfessionByIds, getProfessionsLoadingStatus} from "../../../store/professions";
+import {useSelector} from "react-redux";
 
 const UserProfession = ({profession}) => {
 
-    const {getProfession} = useProfessions()
-    const professionData = getProfession(profession)
-    console.log(professionData, ' Имя профессии')
+    const professionData = useSelector(getProfessionByIds(profession))
+    const professionsLoading = useSelector(getProfessionsLoadingStatus())
 
     return (
-        <div className="card mb-3">
-            <div className="card-body d-flex flex-column justify-content-center text-center">
-                <h5 className="card-title">
-                    <span>Profession</span>
-                </h5>
-                <p className="card-text">
-                    {professionData.name}
-                </p>
+        !professionsLoading
+        ? <div className="card mb-3">
+                <div className="card-body d-flex flex-column justify-content-center text-center">
+                    <h5 className="card-title">
+                        <span>Profession</span>
+                    </h5>
+                    <p className="card-text">
+                        {professionData.name}
+                    </p>
+                </div>
             </div>
-        </div>
+        : <p>loading</p>
+
     );
 };
 

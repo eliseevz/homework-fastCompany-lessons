@@ -6,17 +6,22 @@ import CommentComponent from "./CommentComponent";
 import Loader from "../../Loader/Loader";
 import _ from "lodash"
 import {useComments} from "../../../hooks/useComments";
+import {useDispatch} from "react-redux";
+import {removeComment} from "../../../store/comments";
 
 const UserCommentsList = ({comments, setComments}) => {
 
     const [users, setUsers] = useState()
+    const dispatch = useDispatch()
 
-    const {removeComment} = useComments()
+    // const {removeComment} = useComments()
 
     const onRemoveHandler = async (id) => {
-        const response = await removeComment(id)
+        // const response = await removeComment(id)
+        dispatch(removeComment(id))
     }
 
+    console.log('comments:', comments)
     const sortedComments = comments
         ? _.orderBy(comments, ["created_at"], ["desc"])
         : comments

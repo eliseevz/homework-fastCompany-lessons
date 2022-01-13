@@ -41,7 +41,6 @@ export const useMockData = (params) => {
     async function initialize  () {
         try {
             for(const prof of professions) {
-                console.log(prof._id)
                 const result = await httpService.put("profession/" + prof._id, prof)
                 incrementCount()
             }
@@ -56,7 +55,6 @@ export const useMockData = (params) => {
         } catch (e) {
             setError(e)
             setStatus(statusConsts.error)
-            console.log('smt gone wrong')
         }
 
     }

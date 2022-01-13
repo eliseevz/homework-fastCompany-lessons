@@ -1,5 +1,4 @@
 export function getDateFrom(time) {
-    console.log(time, ' this is time')
     const diff = new Date().getTime() - time
     if (diff / 1000 / 60 >= 60) {
         if (diff / 1000 / 60 / 60 / 24 < 1) {

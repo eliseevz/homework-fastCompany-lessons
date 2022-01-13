@@ -3,7 +3,6 @@ import {useParams} from "react-router"
 import {nanoid} from "nanoid";
 import commentService from "../services/comment.service";
 
-
 const CommentsContext = React.createContext()
 
 export const useComments = () =>
@@ -35,7 +34,7 @@ const CommentsProvider = ({children}) => {
             console.log(content)
             console.log('hello')
         } catch (e) {
-            console.log(e)
+            console.log(e, " useComments")
         }
     }
 

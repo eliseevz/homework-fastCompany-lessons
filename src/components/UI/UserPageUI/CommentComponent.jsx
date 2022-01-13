@@ -1,24 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import Avatar from "../../../utils/Avatar";
-import UserAPI from "../../../API/fake.api/user.api"
-import moment from "moment"
+import React from 'react';
 import {getDateFrom} from "../../../utils/getDateFrom";
-import {useAuth} from "../../../hooks/useAuth";
-import {useUser} from "../../../hooks/useUsers";
+import {useSelector} from "react-redux";
+import {getCurrentUserId, getUserById, getUsersLoadingStatus} from "../../../store/users";
 
 const CommentComponent = ({comment, users, onDelete}) => {
 
-    const {getUserById} = useUser()
-    const {currentUser} = useAuth()
-    const user = getUserById(comment.userId)
+    const currentUserId = useSelector(getCurrentUserId())
+    const user = useSelector(getUserById(comment.userId))
+    const userLoadingStatus = useSelector(getUsersLoadingStatus())
 
-    // const getNameFromUserId =  (userId) => {
-    //     // const user = users.find((item) => item._id === userId)
-    //     // console.log(user)
-    //     // return user.name
-    //     return userId
-    // }
-    console.log(user, ' user БЛЯТЬ')
+    if (userLoadingStatus) {
+        return "loading"
+    }
 
     return (
         <div className="bg-light card-body  mb-3">
@@ -42,7 +35,7 @@ const CommentComponent = ({comment, users, onDelete}) => {
 		                              </span>
                                     </p>
                                     {
-                                        comment.userId === currentUser._id &&
+                                        comment.userId === currentUserId &&
                                         <button onClick={() => onDelete(comment._id)} className="btn btn-sm text-primary d-flex align-items-center">
                                             <i className="bi bi-x-lg"></i>
                                         </button>

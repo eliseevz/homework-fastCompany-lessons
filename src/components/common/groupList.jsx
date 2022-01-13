@@ -8,10 +8,7 @@ const GroupList = ({
     onItemSelect,
     selectedItem
 }) => {
-    console.log(items, " this is items")
     const [itemsArray, newItems] = typeHandler(items)
-    console.log(itemsArray)
-    console.log(newItems, " this is newItems")
     return (
         <ul className="list-group">
             {itemsArray.map((item) => (

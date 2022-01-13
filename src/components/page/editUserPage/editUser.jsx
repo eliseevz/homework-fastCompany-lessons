@@ -1,8 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { useParams, useHistory } from "react-router-dom"
-import api from "../../../API/fake.api/user.api"
-import proffessionsAPI from "../../../API/fake.api/professions.api"
-import qualitiesAPI from "../../../API/fake.api/qualities.api"
 import TextField from "../../common/form/textField";
 import MultiSelectField from "../../common/form/multiSelectField";
 import SelectField from "../../common/form/selectField";
@@ -10,19 +7,25 @@ import RadioField from "../../common/form/radioField";
 import {validator} from "../../../utils/validator";
 import {useAuth} from "../../../hooks/useAuth";
 import {useProfessions} from "../../../hooks/useProfession";
-import {useQualities} from "../../../hooks/useQualities";
+import {useDispatch, useSelector} from "react-redux";
+import {getQualities, getQualitiesLoadingStatus} from "../../../store/qualities";
+import {getProfessions, getProfessionsLoadingStatus} from "../../../store/professions";
+import {getCurrentUserData, updateUser} from "../../../store/users";
 
 const EditUser = () => {
 
     const history = useHistory()
-
     const {userId} = useParams();
+    const dispatch = useDispatch()
 
-    const {currentUser, updateUser} = useAuth()
+    // const {updateUser} = useAuth()
+    const currentUser = useSelector(getCurrentUserData())
     const [userData, setUserData] = useState(currentUser)
-    const {professions} = useProfessions()
-    const {qualities} = useQualities()
+    const professions = useSelector(getProfessions())
+    const professionsLoading = useSelector(getProfessionsLoadingStatus())
     const [errors, setErrors] = useState({})
+    const qualities = useSelector(getQualities())
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus())
 
 
     useEffect(() => {
@@ -69,15 +72,12 @@ const EditUser = () => {
         event.preventDefault()
         const isValid = validate()
         if (isValid) {
-            await updateUser(userData)
-            // console.log("ПУШИМ ОБНОВЛЕНИЯ")
-            // console.log(userData, " out data")
-            // update(userId, userData)
+            dispatch(updateUser(userData))
             history.push(`/users/${userId}`)
         }
     }
 
-    const getQualities = (id) => {
+    const transformQualities = (id) => {
         const findQualities = id.map(qId => {
             return qualities.find(quality => quality._id === qId)
         })
@@ -86,7 +86,7 @@ const EditUser = () => {
 
     return (
         <div>
-            {userData && professions && qualities
+            {userData && !professionsLoading && !qualitiesLoading
                 ?  <div className="container mt-5">
                     <button
                         onClick={() => history.push(`/users/${userId}`)}
@@ -134,7 +134,7 @@ const EditUser = () => {
                                 <MultiSelectField
                                     onChange={handleChange}
                                     options={qualities}
-                                    value={getQualities(userData.qualities)}
+                                    value={transformQualities(userData.qualities)}
                                     name="qualities"
                                     label="Выберите свои качества"
                                 />

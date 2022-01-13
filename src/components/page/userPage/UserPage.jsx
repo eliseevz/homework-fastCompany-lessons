@@ -11,25 +11,24 @@ import UserComments from "../../UI/UserPageUI/UserComments";
 import {useUser} from "../../../hooks/useUsers";
 import CommentsProvider from "../../../hooks/useComments";
 import UserProfession from "../../UI/UserPageUI/UserProfession";
+import {useSelector} from "react-redux";
+import {getUserById} from "../../../store/users";
 
 const UserPage = () => {
 
     const {userId} = useParams()
-    console.log(userId, ' id from UserPage')
+    const user = useSelector(getUserById(userId))
+    // const [user, setUser] = useState(undefined)
 
-    const [user, setUser] = useState(undefined)
-    const {getUserById} = useUser()
 
-    useEffect(() => {
-        console.log("useEffect")
-        getUser()
-    }, [userId])
-
-    const getUser = async () => {
-        const user = getUserById(userId)
-        console.log("this is user: ", user);
-        setUser(user)
-    }
+    // useEffect(() => {
+    //     getUser()
+    // }, [userId])
+    //
+    // const getUser = async () => {
+    //     console.log("this is user: ", user);
+    //     setUser(user)
+    // }
 
     return (
         user

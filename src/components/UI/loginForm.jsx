@@ -6,6 +6,8 @@ import * as yup from 'yup';
 import {useAuth} from "../../hooks/useAuth";
 import {toast} from "react-toastify";
 import {useHistory} from "react-router-dom"
+import {useDispatch, useSelector} from "react-redux";
+import {getAuthErrors, logIn} from "../../store/users";
 
 
 const LoginForm = () => {
@@ -15,11 +17,10 @@ const LoginForm = () => {
         stayOn: false
     })
     const [errors, setErrors] = useState({})
-
-    const {signIn} = useAuth()
+    const loginError = useSelector(getAuthErrors())
+    const dispatch = useDispatch()
 
     const history = useHistory()
-    console.log(history, ' this is history')
 
     const validate = () => {
         validateScheme.validate(data).then(()=>setErrors({})).catch((err) => setErrors({[err.path]: err.message}))
@@ -74,22 +75,17 @@ const LoginForm = () => {
         })))
     }
 
-    const handleSubmit = async (event) => {
+    const handleSubmit =  (event) => {
         event.preventDefault()
         const isValid = validate()
         if (!isValid) return
-        try {
-           await signIn(data)
-            toast.success("Успешная авторизация")
-            console.log(history.location)
-            history.push(history.location.state
-                ? history.location.state.pathname
-                : "/"
-            )
-        } catch (e) {
-            console.log(e, ' this is error in loginForm')
-            setErrors(e)
-        }
+        const redirect = history.location.state
+            ? history.location.state.pathname
+            : "/"
+
+        dispatch(logIn({payload: data, redirect}))
+        toast.success("Успешная авторизация")
+
     }
 
     return (
@@ -116,6 +112,10 @@ const LoginForm = () => {
             >
                 Оставаться в системе
             </CheckBoxField>
+            {
+                loginError &&
+                    <div className="text-danger mb-3">{loginError}</div>
+            }
             <button
                 type="submit"
                 className="btn btn-primary w-100 mx-auto"
